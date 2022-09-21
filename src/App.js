@@ -1,11 +1,12 @@
 import './App.scss';
-
+import HeaderNavbar from './components/HeaderNavbar/HeaderNavbar';
+import TableCoins from './components/TableCoins/TableCoins';
 function App() {
   return (
     <>
-      <h1>cryptosight</h1>
+      <HeaderNavbar />
+      <TableCoins/>
     </>
-
   );
 }
 
