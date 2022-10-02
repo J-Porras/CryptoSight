@@ -3,7 +3,9 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import { db } from '../../api/firebase.js';
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { collection , query, orderBy , onSnapshot, addDoc,serverTimestamp} from 'firebase/firestore';
+import { async } from "@firebase/util";
 const ModalRegister = (props) => {
   const [show, setShow] = useState(false);
   const [password,setPassword]=useState("");
@@ -11,13 +13,26 @@ const ModalRegister = (props) => {
   const [email,setEmail]=useState("");
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  const onRegister=(e)=>{
+  const auth = getAuth();
+
+  const registerWithEmailAndPassword = async (name, email, password) => {
+    try {
+      const res = await createUserWithEmailAndPassword(auth, email, password);
+      const user = res.user;
+      await addDoc(collection(db, "User"), {
+        uid: user.uid,
+        name,
+        authProvider: "local",
+        email,
+      });
+    } catch (err) {
+      console.error(err);
+      alert(err.message);
+    }
+  };
+  const onRegister= async(e)=>{
     e.preventDefault()
-    addDoc(collection(db,'User'),{
-      email:email,
-      name:name,
-      password:password
-      })
+    await registerWithEmailAndPassword(name,email,password);
     setEmail("")
     setName("")
     setPassword("")

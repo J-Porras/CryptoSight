@@ -7,7 +7,9 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import ModalLogin from "../ModalLogin/ModalLogin";
 import ModalRegister from "../ModalRegister/ModalRegister";
 import Button from "react-bootstrap/Button";
-
+import { getAuth } from "firebase/auth";
+const auth = getAuth();
+const user = auth.currentUser;
 const HeaderNavbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
