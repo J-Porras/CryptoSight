@@ -3,7 +3,7 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import { db } from '../../api/firebase.js';
-import { collection , onSnapshot } from 'firebase/firestore';
+import { collection , query, orderBy , onSnapshot, addDoc,serverTimestamp} from 'firebase/firestore';
 const ModalRegister = (props) => {
   const [show, setShow] = useState(false);
   const [password,setPassword]=useState("");
@@ -13,10 +13,15 @@ const ModalRegister = (props) => {
   const handleShow = () => setShow(true);
   const onRegister=(e)=>{
     e.preventDefault()
-
+    addDoc(collection(db,'User'),{
+      email:email,
+      name:name,
+      password:password
+      })
     setEmail("")
     setName("")
     setPassword("")
+    handleClose()
   }
   return (
     <>
@@ -37,7 +42,6 @@ const ModalRegister = (props) => {
                 name="email"
                 placeholder="name@example.com"
                 autoFocus
-                value={email}  
                 defaultValue={email} 
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -48,7 +52,6 @@ const ModalRegister = (props) => {
                 type="text"
                 placeholder="Name"
                 autoFocus
-                value={name}  
                 defaultValue={name} 
                 onChange={(e) => setName(e.target.value)}
               />
@@ -59,7 +62,6 @@ const ModalRegister = (props) => {
               type="password" 
               placeholder="Password" 
               autoFocus
-              value={password}
               defaultValue={password} 
               onChange={(e) => setPassword(e.target.value)} 
         />
