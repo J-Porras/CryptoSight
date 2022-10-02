@@ -11,7 +11,6 @@ const HeaderNavbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   return (
-    <header>
       <Navbar variant="dark" bg="primary" expand="lg" className="p-3">
         <Navbar.Brand href="/">CryptoSight</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -37,7 +36,7 @@ const HeaderNavbar = () => {
           </Nav>
         </Navbar.Collapse>
       </Navbar>
-    </header>
+
   );
 };
 
