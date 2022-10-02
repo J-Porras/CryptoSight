@@ -25,6 +25,7 @@ const ModalRegister = (props) => {
         authProvider: "local",
         email,
       });
+      localStorage.setItem('uid', auth.currentUser.uid);
     } catch (err) {
       console.error(err);
       alert(err.message);
