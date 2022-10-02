@@ -9,7 +9,7 @@ const ModalLogin = (props) => {
 
   return (
     <>
-      <Button variant="outline-light" onClick={handleShow}>
+      <Button variant="outline-light" onClick={handleShow} className="me-2">
         Login
       </Button>
 
