@@ -8,6 +8,10 @@ import ModalLogin from "../ModalLogin/ModalLogin";
 import ModalRegister from "../ModalRegister/ModalRegister";
 import Button from "react-bootstrap/Button";
 import { getAuth } from "firebase/auth";
+
+import Educative from "../Education/Educative";
+import Wallets from "../Education/Wallets";
+
 const auth = getAuth();
 const user = auth.currentUser;
 const HeaderNavbar = () => {
@@ -24,9 +28,9 @@ const HeaderNavbar = () => {
             <NavDropdown title="Guia de Crypto" id="basic-nav-dropdown">
 
 
-              <NavDropdown.Item href="/">Lo basico</NavDropdown.Item>
+              <NavDropdown.Item > <Educative />  </NavDropdown.Item>
               <NavDropdown.Divider />
-              <NavDropdown.Item href="/">Glosario</NavDropdown.Item>
+              <NavDropdown.Item > <Wallets /> </NavDropdown.Item>
             </NavDropdown>
           </Nav>
           <Nav className="mx-1">
