@@ -3,7 +3,7 @@ import { Table, Image, Container } from "react-bootstrap";
 import RowsTable from "./RowsTable";
 import { genericGetCoinApi, listCoins, dataCoins } from "../../api/axiosBase";
 import { formatCurrency } from "../../utils/utils";
-import './TableCoins.scss'
+import "./TableCoins.scss";
 const TableCoins = (props) => {
   const paramsGet = new URLSearchParams();
   paramsGet.append("vs_currency", "usd");
@@ -13,11 +13,10 @@ const TableCoins = (props) => {
   const coinsParams = [];
   //coinsParams.push(per_page)
   //coinsParams.push(page);
-  const [post, setPost] = useState(null);
+  const [coinData, setPost] = useState(null);
 
   useEffect(() => {
     genericGetCoinApi(dataCoins, paramsGet).then((res) => {
-      console.log(res);
       setPost(res.data);
     });
   }, [listCoins]);
@@ -25,13 +24,14 @@ const TableCoins = (props) => {
     "#",
     "Nombre",
     "Precio",
-    "Mayor 24h",
-    "Menor 24h",
+    "24h%",
     "Volumen 24h",
     "Volumen Total",
   ];
   return (
-      <Table hover  responsive>
+    <Container>
+      <h1 className="my-5 d-flex justify-content-center">Monedas</h1>
+      <Table hover responsive>
         <thead>
           <tr>
             {tableHeaders.map((header, index) => (
@@ -39,9 +39,9 @@ const TableCoins = (props) => {
             ))}
           </tr>
         </thead>
-        <tbody> 
-          {post &&
-            post.map((coin, index) => (
+        <tbody>
+          {coinData &&
+            coinData.map((coin, index) => (
               <tr key={index}>
                 <th>{index + 1}</th>
                 <th>
@@ -49,20 +49,19 @@ const TableCoins = (props) => {
                     <div className="me-2">
                       <Image src={coin.image} fluid width={20} height={20} />
                     </div>
-                    <div>{coin.id}</div>
+                    <div>{coin.id.toUpperCase()}</div>
                   </Container>
                 </th>
                 <th>{formatCurrency(coin.current_price)}</th>
-                <th>{formatCurrency(coin.high_24h)}</th>
-                <th>{formatCurrency(coin.low_24h)}</th>
+                <th>{formatCurrency(coin.price_change_percentage_24h)}</th>
+
                 <th>{formatCurrency(coin.total_volume)}</th>
-                <th>{formatCurrency(coin.market_cap)  }</th>
+                <th>{formatCurrency(coin.market_cap)}</th>
               </tr>
             ))}
         </tbody>
       </Table>
-
-      
+    </Container>
   );
 };
 
