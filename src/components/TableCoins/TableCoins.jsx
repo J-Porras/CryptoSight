@@ -71,7 +71,7 @@ const TableCoins = (props) => {
 
   return (
     <Container>
-      <h1 className="my-5 d-flex justify-content-center">Monedas</h1>
+      <h1 className="my-5 d-flex justify-content-center">CryptoMonedas</h1>
       <Table hover responsive>
         <thead>
           <tr>
