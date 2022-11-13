@@ -4,7 +4,7 @@ import { genericGetCoinApi, listCoins, dataCoins } from "../../api/axiosBase";
 import { formatCurrency } from "../../utils/utils";
 import { BsStarFill, BsStar } from "react-icons/bs";
 import "./TableCoins.scss";
-import { addCoinToFavs } from "../../api/firebase";
+import { addCoinToFavs, deleteCoinFromFavs } from "../../api/firebase";
 import { auth, db, tables } from "../../api/firebase";
 
 import { onAuthStateChanged } from "firebase/auth";
@@ -59,14 +59,15 @@ const TableCoins = (props) => {
     return likedCoins.some((coin) => coin.coinid === coinName);
   }
 
-  function handleAddCoin(coinName) {
-    addCoinToFavs(coinName).then(() => {
-      getFavsCoins();
-    });
+  async function handleAddCoin(coinName) {
+    await addCoinToFavs(coinName.toUpperCase());
+    getFavsCoins();
   }
 
-  function foo() {
-    //
+  async function handleDeleteCoin(coinName) {
+    await deleteCoinFromFavs(coinName.toUpperCase());
+    console.log("coin deleted");
+    getFavsCoins();
   }
 
   return (
@@ -93,8 +94,8 @@ const TableCoins = (props) => {
                     }
                     onClick={
                       !isFavCoin(coin.id.toUpperCase())
-                        ? () => handleAddCoin(coin.id.toUpperCase())
-                        : () => foo()
+                        ? () => handleAddCoin(coin.id)
+                        : () => handleDeleteCoin(coin.id)
                     }
                   >
                     {isFavCoin(coin.id.toUpperCase()) ? (

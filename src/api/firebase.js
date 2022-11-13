@@ -12,6 +12,7 @@ import {
   where,
   getDocs,
   addDoc,
+  deleteDoc,
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -73,11 +74,22 @@ export const addCoinToFavs = async (coinName) => {
   });
   unsubscribe();
 };
-
-export async function getUser() {
+export const deleteCoinFromFavs = async (coinName) => {
+  const q = query(
+    collection(db, tables.walletTable),
+    where("coinid", "==", coinName)
+  );
+  const querySnapshot = await getDocs(q);
+  if (querySnapshot.size) {
+    const document = querySnapshot.docs[0];
+    const docRef = doc(db, tables.walletTable, document.id);
+    await deleteDoc(docRef);
+  }
+};
+export async function getUser(userid) {
   const q = query(
     collection(db, tables.usersTable),
-    where("uid", "==", "VWtL6gjnaQRP5TH6ocUiSKcWrW33")
+    where("uid", "==", userid)
   );
 
   const querySnapshot = await getDocs(q);
