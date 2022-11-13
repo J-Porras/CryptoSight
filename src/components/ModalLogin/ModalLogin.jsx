@@ -1,19 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
-import { db } from "../../api/firebase.js";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import {
-  collection,
-  query,
-  orderBy,
-  onSnapshot,
-  addDoc,
-  serverTimestamp,
-} from "firebase/firestore";
-import { async } from "@firebase/util";
-const ModalLogin = (props) => {
+const ModalLogin = ({ setIsLoggedIn }) => {
   const [show, setShow] = useState(false);
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
@@ -24,13 +14,13 @@ const ModalLogin = (props) => {
   const logInWithEmailAndPassword = async (email, password) => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      console.log(auth.currentUser.email);
       localStorage.setItem("uid", auth.currentUser.uid);
+      setIsLoggedIn(true);
     } catch (err) {
-      console.error(err);
       alert(err.message);
     }
   };
+
   const onLogin = async (e) => {
     e.preventDefault();
     await logInWithEmailAndPassword(email, password);
@@ -38,6 +28,7 @@ const ModalLogin = (props) => {
     setPassword("");
     handleClose();
   };
+
   return (
     <>
       <Button variant="outline-light" onClick={handleShow} className="me-2">

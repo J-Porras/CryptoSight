@@ -6,3 +6,11 @@ export function formatCurrency(digit, language = "en-US", currency = "USD") {
   });
   return currencyFormatter.format(digit);
 }
+
+export function trimString(value) {
+  return value.trim();
+}
+
+export function getCurrentUserID() {
+  return localStorage.getItem("uid");
+}

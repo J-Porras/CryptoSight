@@ -26,7 +26,7 @@ const ModalRegister = (props) => {
     try {
       const res = await createUserWithEmailAndPassword(auth, email, password);
       const user = res.user;
-      await addDoc(collection(db, "User"), {
+      await addDoc(collection(db, "users"), {
         uid: user.uid,
         name,
         authProvider: "local",
@@ -58,34 +58,38 @@ const ModalRegister = (props) => {
         </Modal.Header>
         <Modal.Body>
           <Form>
-            <Form.Group className="mb-3" controlId="formBasicEmail">
-              <Form.Label className="ms-3">Email address</Form.Label>
+            <Form.Group className="mb-3" controlId="userName">
+              <Form.Label className="ms-3">Nombre</Form.Label>
+              <Form.Control
+                type="text"
+                name="userName"
+                placeholder="Nombre"
+                autoFocus
+                defaultValue={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="userEmail">
+              <Form.Label className="ms-3">Correo</Form.Label>
               <Form.Control
                 type="email"
-                name="email"
+                name="userEmail"
                 placeholder="name@example.com"
                 autoFocus
                 defaultValue={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </Form.Group>
-            <Form.Group className="mb-3" controlId="formBasicEmail">
-              <Form.Label className="ms-3">Name</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Name"
-                autoFocus
-                defaultValue={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="formBasicPassword">
-              <Form.Label className="ms-2">Password</Form.Label>
+
+            <Form.Group className="mb-3" controlId="userPassword">
+              <Form.Label className="ms-2">Contraseña</Form.Label>
               <Form.Control
                 type="password"
-                placeholder="Password"
+                name="userPassword"
+                placeholder="Contraseña"
                 autoFocus
                 defaultValue={password}
+                minLength="6"
                 onChange={(e) => setPassword(e.target.value)}
               />
             </Form.Group>

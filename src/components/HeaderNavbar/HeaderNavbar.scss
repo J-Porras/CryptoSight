@@ -1,4 +1,13 @@
-.plain-text{
-    color: inherit;
+.plain-text {
+  color: inherit;
   text-decoration: inherit;
+  &__nav {
+    text-decoration: inherit;
+
+    color: #ffffff;
+    align-self: center;
+    &:hover {
+      color: #ffffff;
+    }
+  }
 }

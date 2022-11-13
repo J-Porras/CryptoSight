@@ -1,33 +1,74 @@
 import { useEffect, useState } from "react";
-import { Table, Image, Container } from "react-bootstrap";
-import RowsTable from "./RowsTable";
+import { Table, Image, Container, Button } from "react-bootstrap";
 import { genericGetCoinApi, listCoins, dataCoins } from "../../api/axiosBase";
 import { formatCurrency } from "../../utils/utils";
+import { BsStarFill, BsStar } from "react-icons/bs";
 import "./TableCoins.scss";
+import { addCoinToFavs } from "../../api/firebase";
+import { auth, db, tables } from "../../api/firebase";
+
+import { onAuthStateChanged } from "firebase/auth";
+import { doc, query, collection, where, getDocs } from "firebase/firestore";
 const TableCoins = (props) => {
   const paramsGet = new URLSearchParams();
   paramsGet.append("vs_currency", "usd");
 
-  let per_page = 5;
-  let page = 0; //initial page
-  const coinsParams = [];
-  //coinsParams.push(per_page)
-  //coinsParams.push(page);
   const [coinData, setPost] = useState(null);
+  const [likedCoins, setLikedCoins] = useState();
 
   useEffect(() => {
-    genericGetCoinApi(dataCoins, paramsGet).then((res) => {
-      setPost(res.data);
-    });
+    getFavsCoins();
   }, [listCoins]);
+
+  const getFavsCoins = () => {
+    const coinList = [];
+
+    let unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const userDocRef = doc(db, tables.usersTable, user.uid);
+        const q = query(
+          collection(db, tables.walletTable),
+          where("userid", "==", userDocRef)
+        );
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+          coinList.push(doc.data());
+        });
+        genericGetCoinApi(dataCoins, paramsGet).then((res) => {
+          setPost(res.data);
+        });
+        setLikedCoins(coinList);
+      }
+    });
+    unsubscribe();
+  };
+
   const tableHeaders = [
     "#",
+    <Button variant="light" className="table-head">
+      <BsStarFill />
+    </Button>,
     "Nombre",
     "Precio",
     "24h%",
     "Volumen 24h",
     "Volumen Total",
   ];
+
+  function isFavCoin(coinName) {
+    return likedCoins.some((coin) => coin.coinid === coinName);
+  }
+
+  function handleAddCoin(coinName) {
+    addCoinToFavs(coinName).then(() => {
+      getFavsCoins();
+    });
+  }
+
+  function foo() {
+    //
+  }
+
   return (
     <Container>
       <h1 className="my-5 d-flex justify-content-center">Monedas</h1>
@@ -45,6 +86,25 @@ const TableCoins = (props) => {
               <tr key={index}>
                 <th>{index + 1}</th>
                 <th>
+                  <Button
+                    variant="light"
+                    className={
+                      isFavCoin(coin.id.toUpperCase()) ? "coin--liked" : ""
+                    }
+                    onClick={
+                      !isFavCoin(coin.id.toUpperCase())
+                        ? () => handleAddCoin(coin.id.toUpperCase())
+                        : () => foo()
+                    }
+                  >
+                    {isFavCoin(coin.id.toUpperCase()) ? (
+                      <BsStarFill />
+                    ) : (
+                      <BsStar />
+                    )}
+                  </Button>
+                </th>
+                <th>
                   <Container fluid className="d-flex">
                     <div className="me-2">
                       <Image src={coin.image} fluid width={20} height={20} />
@@ -52,6 +112,7 @@ const TableCoins = (props) => {
                     <div>{coin.id.toUpperCase()}</div>
                   </Container>
                 </th>
+
                 <th>{formatCurrency(coin.current_price)}</th>
                 <th>{formatCurrency(coin.price_change_percentage_24h)}</th>
 

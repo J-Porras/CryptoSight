@@ -7,16 +7,30 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import ModalLogin from "../ModalLogin/ModalLogin";
 import ModalRegister from "../ModalRegister/ModalRegister";
 import Button from "react-bootstrap/Button";
-import { getAuth } from "firebase/auth";
+import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 import { Link } from "react-router-dom";
-
 import Educative from "../Education/Educative";
 import Wallets from "../Education/Wallets";
 import "./HeaderNavbar.scss";
-const auth = getAuth();
-const user = auth.currentUser;
+import { useEffect } from "react";
+import { getCurrentUserID } from "../../utils/utils";
+import { doc, getDoc } from "firebase/firestore";
+import { db, getCurrentUserInfo, logOut } from "../../api/firebase";
+
 const HeaderNavbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const auth = getAuth();
+  const user = auth.currentUser;
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
+      }
+    });
+  }, []);
 
   return (
     <Navbar variant="dark" bg="primary" expand="lg" className="p-3">
@@ -24,34 +38,38 @@ const HeaderNavbar = () => {
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="me-auto">
-          <Nav.Link href="/">Portafolio</Nav.Link>
+          {isLoggedIn && (
+            <Link to="/portafolio" className="plain-text__nav">
+              Portafolio
+            </Link>
+          )}
 
           <NavDropdown title="Guia de Crypto" id="basic-nav-dropdown">
             <NavDropdown.Item>
-              {" "}
-              <Educative />{" "}
+              <Educative />
             </NavDropdown.Item>
             <NavDropdown.Item>
-              {" "}
-              <Wallets />{" "}
+              <Wallets />
             </NavDropdown.Item>
 
             <NavDropdown.Divider />
             <NavDropdown.Item>
               <Link to="/glosario" className="plain-text">
                 Glosario
-              </Link>{" "}
+              </Link>
             </NavDropdown.Item>
           </NavDropdown>
         </Nav>
         <Nav className="mx-1">
           {!isLoggedIn ? (
             <Container>
-              <ModalLogin />
+              <ModalLogin setIsLoggedIn={setIsLoggedIn} />
               <ModalRegister />
             </Container>
           ) : (
-            <Button variant="outline-light">Log Out</Button>
+            <Button variant="outline-light" onClick={logOut}>
+              Log Out
+            </Button>
           )}
         </Nav>
       </Navbar.Collapse>
