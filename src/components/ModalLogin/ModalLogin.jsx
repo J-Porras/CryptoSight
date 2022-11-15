@@ -37,7 +37,7 @@ const ModalLogin = ({ setIsLoggedIn }) => {
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Iniciar Sesión</Modal.Title>
+          <Modal.Title>Ingresar</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
