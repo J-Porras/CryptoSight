@@ -2,10 +2,8 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
-import { getCurrentUserID } from "../utils/utils";
 import {
   doc,
-  getDoc,
   query,
   getFirestore,
   collection,
@@ -13,6 +11,7 @@ import {
   getDocs,
   addDoc,
   deleteDoc,
+  setDoc,
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -46,14 +45,6 @@ export function logOut() {
       console.log(error);
     });
 }
-/* 
-export function addCoinToFavs(coinData) {
-  let allData = {
-    ...coinData,
-    userid: db.doc(`${tables.usersTable}/` + auth.currentUser.uid),
-  };
-  db.collection(tables.walletTable).add(allData);
-} */
 
 export function getUserIdDocument(userid) {
   return `/${tables.usersTable}/${userid}`;
@@ -97,5 +88,34 @@ export async function getUser(userid) {
   querySnapshot.forEach((doc) => {
     console.log(doc.id, " => ", doc.data());
   });
+}
+export async function getCoinDocByName(coinName) {
+  const q = query(
+    collection(db, tables.walletTable),
+    where("coinid", "==", coinName)
+  );
+  const querySnapshot = await getDocs(q);
+  return querySnapshot.docs.length ? querySnapshot.docs[0] : null;
+}
+export async function updateCoinsValues(coinData) {
+  let unsubscribe = onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      const coinDoc = await getCoinDocByName(coinData.coinid);
+      if (coinDoc === null || coinDoc === undefined) {
+        return;
+      }
+      const coinDocRef = doc(db, tables.walletTable, coinDoc.id);
+      await setDoc(coinDocRef, {
+        ...coinData,
+      })
+        .then(() => {
+          console.log("coin updated");
+        })
+        .catch((error) => {
+          console.log("Error updating coin: ", error);
+        });
+    }
+  });
+  unsubscribe();
 }
 export { db, auth };

@@ -54,7 +54,7 @@ const ModalRegister = (props) => {
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Registration</Modal.Title>
+          <Modal.Title>Registrarse</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
