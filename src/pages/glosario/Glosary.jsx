@@ -28,6 +28,7 @@ const Glosary = () => {
       descripcion:
         "Ethereum es la segunda criptomoneda más grande por capitalización de mercado después de Bitcoin. También es una plataforma informática descentralizada que puede ejecutar una gran variedad de aplicaciones",
       imagen: ethereum2,
+      glosariourl: "ethereum",
     },
     {
       titulo: "¿Qué es la criptografía?",
@@ -60,7 +61,6 @@ const Glosary = () => {
                 />
                 <Card.Body>
                   <Card.Title>
-                    {" "}
                     <Link
                       to={
                         element.glosariourl ? element.glosariourl : "/glosario"

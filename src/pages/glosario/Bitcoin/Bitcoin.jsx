@@ -16,7 +16,7 @@ const Bitcoin = () => {
           digital que permite realizar transacciones seguras entre pares en
           Internet.
         </p>
-        <ul className="f9 px-4    ">
+        <ul className="f9 px-4">
           <li className="f9">
             A diferencia de servicios como Venmo y PayPal, que se basan en el
             sistema financiero tradicional para obtener el permiso para

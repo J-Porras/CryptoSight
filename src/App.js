@@ -10,6 +10,7 @@ import Blockchain from "./pages/glosario/Blockchain/Blockchain";
 import Bitcoin from "./pages/glosario/Bitcoin/Bitcoin";
 import Footer from "./components/Footer/Footer";
 import Portafolio from "./pages/Portafolio/Portafolio";
+import Ethereum from "./pages/glosario/Ethereum/Ethereum";
 
 function App() {
   useEffect(() => {
@@ -30,6 +31,7 @@ function App() {
           <Route index element={<Glosary />} />
           <Route path="blockchain" element={<Blockchain />} />
           <Route path="bitcoin" element={<Bitcoin />} />
+          <Route path="ethereum" element={<Ethereum />} />
         </Route>
       </Routes>
       <Footer />
